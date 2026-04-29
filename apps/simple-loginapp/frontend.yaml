@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: pro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      imagePullSecrets:          # ← tambahkan ini
+        - name: ghcr-secret    
+      containers:
+        - name: frontend
+          image: ghcr.io/ilyasjaelani/pro-frontend:latest  # auto-updated by CI
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: API_BASE
+              value: "http://172.16.25.204:30501/api"
+            - name: PORT
+              value: "5000"
+            - name: BACKEND_URL
+              value: "http://backend:5001"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 30
+ 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: pro
+spec:
+  selector:
+    app: frontend
+  type: NodePort
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 30500
+ 
+---

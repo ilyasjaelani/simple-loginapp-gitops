@@ -1,0 +1,25 @@
+apiVersion: argosimple-loginappj.io/v1alpha1
+kind: Application
+metadata:
+  name: simple-loginapp
+  namespace: argocd               # namespace tempat ArgoCD terinstall
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  simple-loginappject: default
+ 
+  source:
+    repoURL: https://github.com/ilyasjaelani/simple-loginapp-gitops  # ganti!
+    targetRevision: main
+    path: apps/simple-loginapp             # folder manifest yang di-watch ArgoCD
+ 
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: simple-loginapp
+ 
+  syncPolicy:
+    automated:
+      prune: true                 # hapus resource yang tidak ada di manifest
+      selfHeal: true              # kembalikan kalau ada perubahan manual di cluster
+    syncOptions:
+      - CreateNamespace=true      # buat namespace 'simple-loginapp' kalau belum ada
