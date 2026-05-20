@@ -17,7 +17,7 @@ spec:
         - name: ghcr-secret    
       containers:
         - name: backend
-          image: ghcr.io/ilyasjaelani/simple-loginapp-backend:c4325ae
+          image: ghcr.io/ilyasjaelani/simple-loginapp-backend:2d18ed7
           imagePullPolicy: Always
           ports:
             - containerPort: 5001
