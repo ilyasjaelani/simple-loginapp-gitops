@@ -35,7 +35,7 @@ spec:
             - name: POSTGRES_DB
               value: "pro_db"
             - name: POSTGRES_USER
-              value: "pro_user"
+              value: "postgres"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -46,14 +46,14 @@ spec:
               mountPath: /var/lib/postgresql/data
           readinessProbe:
             exec:
-              command: ["pg_isready", "-U", "pro_user", "-d", "pro_db"]
+              command: ["pg_isready", "-U", "postgres", "-d", "pro_db"]
             initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 5
           livenessProbe:
             exec:
-              command: ["pg_isready", "-U", "pro_user", "-d", "pro_db"]
+              command: ["pg_isready", "-U", "postgres", "-d", "pro_db"]
             initialDelaySeconds: 30
             periodSeconds: 30
       volumes:
